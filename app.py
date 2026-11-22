@@ -1,11 +1,11 @@
 
 from pathlib import Path
 from uuid import uuid4
+import subprocess
 
 from flask import Flask, render_template, request, send_file, flash, redirect, url_for
 from werkzeug.utils import secure_filename
 from pdf2docx import Converter
-from docx2pdf import convert as word_to_pdf
 
 app = Flask(__name__)
 app.secret_key = "my_document_converter_secret"
@@ -96,7 +96,27 @@ def word_to_pdf():
     file.save(word_path)
 
     try:
-        word_to_pdf(str(word_path), str(pdf_path))
+        subprocess.run(
+            [
+                "libreoffice",
+                "--headless",
+                "--convert-to",
+                "pdf",
+                "--outdir",
+                str(OUTPUT_FOLDER),
+                str(word_path)
+            ],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+
+        generated_pdf = OUTPUT_FOLDER / f"{word_path.stem}.pdf"
+
+        if not generated_pdf.exists():
+            raise FileNotFoundError("PDF file was not created.")
+
+        generated_pdf.rename(pdf_path)
 
         return send_file(
             pdf_path,
@@ -105,7 +125,7 @@ def word_to_pdf():
         )
 
     except Exception:
-        flash("Word conversion failed. Check Microsoft Word installation.")
+        flash("Word conversion failed. Please try again.")
         return redirect(url_for("home"))
 
     finally:
