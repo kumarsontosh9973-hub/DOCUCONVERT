@@ -1,4 +1,5 @@
 
+import os
 from pathlib import Path
 from uuid import uuid4
 import subprocess
@@ -8,7 +9,7 @@ from werkzeug.utils import secure_filename
 from pdf2docx import Converter
 
 app = Flask(__name__)
-app.secret_key = "my_document_converter_secret"
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 BASE_DIR = Path(__file__).resolve().parent
 
