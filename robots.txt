@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://docuconvert-cn9u.onrender.com/sitemap.xml
