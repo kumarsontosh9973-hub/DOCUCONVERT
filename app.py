@@ -3,8 +3,7 @@ import os
 from pathlib import Path
 from uuid import uuid4
 import subprocess
-
-from flask import Flask, render_template, request, send_file, flash, redirect, url_for
+from flask import Flask, render_template, request, send_file, flash, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 from pdf2docx import Converter
 
@@ -26,6 +25,10 @@ app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024
 @app.route("/")
 def home():
     return render_template("index.html")
+
+@app.route("/robots.txt")
+def robots():
+    return send_from_directory(BASE_DIR, "robots.txt")
 
 
 # PDF TO WORD CONVERSION
