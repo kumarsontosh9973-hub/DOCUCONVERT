@@ -30,6 +30,16 @@ def home():
 def robots():
     return send_from_directory(BASE_DIR, "robots.txt")
 
+@app.route("/sitemap.xml")
+def sitemap():
+    xml = """<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+            <loc>https://docuconvert-cn9u.onrender.com/</loc>
+        </url>
+    </urlset>
+    """
+    return xml, 200, {"Content-Type": "application/xml"}
 
 # PDF TO WORD CONVERSION
 @app.route("/pdf-to-word", methods=["POST"])
